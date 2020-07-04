@@ -1,7 +1,7 @@
-node_modules.idea/
-*.iml
-sandbox/
 node_modules
+.idea
+*.iml
+sandbox
 
 # Logs
 logs
