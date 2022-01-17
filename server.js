@@ -8,14 +8,13 @@ var config = require('./config');
 var loadBalancer = require('./load-balancer');
 var prob = require('./request-prober');
 var forwardRequest = require('./request-forwarder');
-
+var forwardToHTTPS = require('./https-request-forwarder');
 
 var app = express();
 
 app.use(cors());
 app.use(function(req,res,next) {
 	if (req.path == "/$status") {
-		console.log(req.path);
 		res.write(JSON.stringify(loadBalancer.status()));
 		res.end();
 	} else if (req.path == "/$where") {
@@ -27,6 +26,11 @@ app.use(function(req,res,next) {
 		next();
 	}
 });
+
+/**
+ * Forward requests to https
+ */
+app.use("/external/:protocol/:host/*", forwardToHTTPS)
 
 app.use(forwardRequest);
 

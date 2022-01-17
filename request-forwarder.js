@@ -17,7 +17,6 @@ function handleError(req, res) {
 
 function forwardRequest(req, res) {
 	var ring = loadBalancer.findRing(req.url);
-	var path = url.parse(req.url).pathname;
 
 	if (!loadBalancer.ringReady(ring)) {
 		handleError(req,res)({statusCode: 502, code: 'NO-TARGETS'});
@@ -27,7 +26,6 @@ function forwardRequest(req, res) {
 	var key = prob.extractGeoSource(req.url);
 
 	var target = loadBalancer(ring, key);
-	console.log(req.method, path, target, key);
 
 	if (req.method == 'GET') {
 		req.pipe(request(target + req.url)).on('error', handleError(req, res)).pipe(res);
